@@ -59,6 +59,7 @@ class Graf {
                     Movie tempMovie = movies.get(inputs[x]);
                     
                     //oppretter felt og legger inn i kant-hashmapene
+                    // TODO: Make null-check tempMovie-based as opposed to mEdges's HashSet
                     if (graf.mEdges.get(tempMovie) != null) {
                         graf.aEdges.get(actor).add(tempMovie);
                         graf.mEdges.get(tempMovie).add(actor);
@@ -69,6 +70,8 @@ class Graf {
             //printer feilbane
             e.printStackTrace();
         }
+
+        // TODO: Add cyclic behaviour to program interface
         System.out.println(graf.countNodesEdges());
 
         System.out.println("\nSix degrees of IMDb:");
@@ -93,19 +96,20 @@ class Graf {
             edges += aEdges.get(key).size();
         }
         
+        //TODO: Disable parallel edges in count
         //hvis ansett som en parallell graf så teller vi kanter fra skuespiller til film + omvendt
         for (Movie key : mEdges.keySet()) {
             edges += mEdges.get(key).size();
         }
         
         return String.format("Antall noder: %d\nAntall kanter: %d", nodes, edges);
-        
     }
+
+    //TODO: Unify input-mechanism for fetching Actors from user + standardify input
     
     /** Dette er metoden brukt for oppgaven sixDegreesOfIMDB
      * @return En streng som pent representerer veien fra 'from' til 'to' 
      */
- 
     private String sixDegrees() {
         Scanner scan = new Scanner(System.in);
         
@@ -124,6 +128,7 @@ class Graf {
      * @param actorId En streng som er lik IDen eller navnet til en actor i aEdges
      */
     private Actor findActor(String actorId) {
+        // TODO: make findActor less ambiguous when choosing an actor who has the same name as another one
         for (Actor actor: aEdges.keySet()) {
             if (actorId.equals(actor.getId()) || actorId.equals(actor.toString())) {
                 return actor;
@@ -145,6 +150,7 @@ class Graf {
             return String.format("Fant ikke en felles sti mellom %s og %s", from, to);
         }
         
+        //TODO: Standardize and utilize byggvei method for path creation to reduce duplicated code
         // Lager et array som viser veien fra 'to' til 'from'
         Node current = to;
         while (current != from) {

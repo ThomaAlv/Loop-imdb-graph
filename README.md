@@ -18,19 +18,23 @@ At startup, the program will read the movies.tsv and actors.tsv files in that or
 
 #### Six degrees of IMDb
 This part of the program is inspired by the infamous *Six Degrees of Separation*-theory and simulates the degrees of separation between two given actors. The program will read the names or tt-ids of two actors of the user's choice from `stdin`, then try to find the shortest possible path between them based on the graph's dataset. Output will be generated and printed to `stdout` as follows:  
+
   Actor 1  
   ===[ Movie 1 (6.6) ] ===> Intermediate actor  
   ===[ Movie 2 (8.9) ] ===> Actor 2  
 
+
 #### Dijknchill
 While the name might not suggest so, the premise of this part of the program is to find the **chillest** path from actor 1 to actor 2 (taken from input like in Six degrees of IMDb). The chillest path will only include the highest rated movies such that the overall "weight" of the path is as short as possible. This might mean the path will include several movies of a higher rating as opposed to only a few with worse ratings.  
+
   Actor 1  
   ===[ Movie 1 (9.7) ] ===> Intermediate actor  
   ===[ Movie 2 (9.2) ] ===>  Intermediate actor  
   ===[ Movie 3 (8.9) ] ===>  Actor 2  
   Total weight: (10 - 9.7) + (10 - 9.2) + (10 - 8.9) = 1.2  
+  
   Here we can observe the chillest path going through three movies and two intermediate actors, while the shortest path only goes through two movies and a single intermediate actor.
 
 #### Graph component analysis
 The last flow in the program gives a count of all the graph's components and their size. This allows us to see the structure and clustering in the graph, albeit not graphically. Output is formatted as:  
-There are *X* components of size *x*
+There are *X* components of size *X*

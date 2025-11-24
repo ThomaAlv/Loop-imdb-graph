@@ -72,7 +72,7 @@ class Graf {
         }
         //print total amount of nodes and edges
         System.out.println("\nGraph succesfully generated.");
-        System.out.println(graf.countNodesEdges());
+        System.out.println(graf.countNodesEdges() + "\n");
 
         //make a looping UI for the user to choose functionality
         Scanner flowIO = new Scanner(System.in);
@@ -80,7 +80,7 @@ class Graf {
         while (!flowChoice.equals("exit")) {
             //print flow choices for user
             System.out.println(
-                "\nPlease choose one of the following options:\n" +
+                "Please choose one of the following options:\n" +
                 "1: Six degrees of IMDb - Find the shortest path between two actors\n" +
                 "2: Dijknchill - Find the 'chillest' path between two actors\n" +
                 "3: Count components - Give information about the graph's components and their size\n" +
@@ -93,11 +93,11 @@ class Graf {
             switch (flowChoice) {
                 case "1":
                     System.out.println("\nSix degrees of IMDb:");
-                    System.out.println(graf.sixDegrees());
+                    System.out.println(String.format("\nSix Degrees: %s", graf.sixDegrees()));
                     break;
                 case "2":
-                    System.out.println("\nDijknChill");
-                    System.out.println(graf.dijknchill());
+                    System.out.println("\nDijknChill:");
+                    System.out.println(String.format("DijknChill: %s", graf.dijknchill()));
                     break;
                 case "3":
                     System.out.println("\nGraph components:");
@@ -112,6 +112,10 @@ class Graf {
         }
     }
     
+    /**
+     * counts all the nodes and edges of the graph
+     * @return a string representation of the total nodes and edges
+     */
     private String countNodesEdges() {
         //teller antall noder ved å se på størrelse til hashmap, hver nøkkel er en node
         //bruker både movies- og actors-map fordi begge er noder i vår struktur
@@ -127,21 +131,49 @@ class Graf {
         return String.format("Antall noder: %d\nAntall kanter: %d", nodes, edges);
     }
 
-    //TODO: Unify input-mechanism for fetching Actors from user + standardify input
+    /**
+     * Fetches the start and goal node from the user with input validation
+     * @param calledBy - the name of the method that called this method
+     * @return an Actor array where Actor[0] is the start node and Actor[1] is the goal node
+     */
+    private Actor[] getStartAndGoalNodeFromUser(String calledBy) {
+        Actor[] inputChoices = new Actor[2];
+        inputChoices[0] = scanSingleActorFromUser(calledBy, "from (id or name)");
+        inputChoices[1] = scanSingleActorFromUser(calledBy, "to (id or name)");
+
+        return inputChoices;
+    }
+
+    /**
+     * Scans an actor to be used as input; retries input sequence until success
+     * @param calledBy - the top environment that needs input
+     * @param inputMessage - the message to display when asking user for input
+     * @return the Actor-object of the actor, given a successful search
+     */
+    private Actor scanSingleActorFromUser(String calledBy, String inputMessage) {
+        Scanner actorIO = new Scanner(System.in);
+        Actor actorChoice = null;
+
+        //retry input until vaid actor is found
+        while (actorChoice == null) {
+            System.out.print(String.format("\n%s: %s: ", calledBy, inputMessage));
+            actorChoice = findActor(actorIO.nextLine());
+
+            if (actorChoice == null) { //retry if search was unsuccessful
+                System.out.println("\nCould not find that actor. Please try again.");
+                continue;
+            }
+        }
+        return actorChoice;
+    }
     
     /** Dette er metoden brukt for oppgaven sixDegreesOfIMDB
      * @return En streng som pent representerer veien fra 'from' til 'to' 
      */
     private String sixDegrees() {
-        Scanner scan = new Scanner(System.in);
-        
-        System.out.print("fra (id eller navn): ");
-        Actor from = findActor(scan.nextLine());
-        
-        System.out.print("til (id eller navn): ");
-        Actor to = findActor(scan.nextLine());
-        
-        return shortestRoad(from, to);
+        Actor[] fromAndTo = getStartAndGoalNodeFromUser("sixDegrees");
+
+        return shortestRoad(fromAndTo[0], fromAndTo[1]);
     }
 
     /** 
@@ -270,11 +302,9 @@ class Graf {
         HashMap<Node, Node[]> kant = new HashMap<>();
 
         //spør og henter aktuelle skuespillere
-        Scanner scan = new Scanner(System.in);
-        System.out.print("fra (id eller navn): ");
-        Actor from = findActor(scan.nextLine());
-        System.out.print("til (id eller navn): ");
-        Actor goal = findActor(scan.nextLine());
+        Actor[] fromTo = getStartAndGoalNodeFromUser("dijknchill");
+        Actor from = fromTo[0];
+        Actor goal = fromTo[1];
 
         //Setter start avstanden til alle noder til uendelig og uten kanter
         for (Actor actor : aEdges.keySet()) {
@@ -354,7 +384,7 @@ class Graf {
             res.append(String.format("===[ %s ] ===> %s\n", edge ,nextNode));
         }
         if (weighted) {
-            res.append("TOTAL VEKT:"+totalvekt);
+            res.append("TOTAL VEKT: " +totalvekt+ "\n");
         }
         return res.toString();
     }

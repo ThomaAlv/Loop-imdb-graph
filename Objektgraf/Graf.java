@@ -215,37 +215,21 @@ class Graf {
      * @param to Et objekt av klassen Actor (som er i aEdges)
     */
     public String shortestRoad(Actor from, Actor to) {
-        HashMap<Actor, Node[]> allPaths = breadthFirstSearch(from);
-        ArrayList<Node> fastestPath = new ArrayList<>();
+        HashMap<Node, Node[]> allPaths = breadthFirstSearch(from);
         
         // Returnerer en beskjed om det ikke finnes en sti mellom 'to' og 'front'
         if (!allPaths.containsKey(to)) {
             return String.format("Fant ikke en felles sti mellom %s og %s", from, to);
         }
         
-        //TODO: Standardize and utilize byggvei method for path creation to reduce duplicated code
-        // Lager et array som viser veien fra 'to' til 'from'
-        Node current = to;
-        while (current != from) {
-            // System.err.println(current);
-            fastestPath.add(current);
-            current = allPaths.get(current)[1];
-        }
-
-        // Bygger strengen som representerer veien fra 'from' til 'to'
-        StringBuilder stringPath = new StringBuilder(from + "\n");
-        for (int i = fastestPath.size()-1; i >= 0; i--) {
-            stringPath.append(String.format("===[ %s ] ===> %s\n", allPaths.get(fastestPath.get(i))[0].toString(), fastestPath.get(i)));
-        }
-
-        return stringPath.toString();
+        return byggvei(from, to, allPaths, false);
     }
 
     /** Bredde-først søk som går fra 'from' 
      * @param from Et objekt av klassen Actor (som er i aEdges)
      * @return Et HashMap (fra Actor til Node[]) hvor index 1 i Node[] er skuespilleren som la nøkkelen inn i hashmappet, og index 0 er filmen de begge har spilt i
     */
-    private HashMap<Actor, Node[]> breadthFirstSearch(Actor from) {
+    private HashMap<Node, Node[]> breadthFirstSearch(Actor from) {
         // Dette er dequen vi må iterere gjennom
         Deque<Actor> deque = new LinkedList<>();
         deque.addLast(from);
@@ -253,7 +237,7 @@ class Graf {
         // Alle noder vi har besøkt
         Set<Actor> visited = new HashSet<>();
 
-        HashMap<Actor, Node[]> result = new HashMap<>(); // Index 0 i arrayet er filmen, index 1 er parent. Dette er dritstygt, men jeg kommer ikke på noe bedre
+        HashMap<Node, Node[]> result = new HashMap<>(); // Index 0 i arrayet er filmen, index 1 er parent. Dette er dritstygt, men jeg kommer ikke på noe bedre
         result.put(from, null);
 
         while (deque.size() != 0) {
@@ -333,18 +317,19 @@ class Graf {
             }
             
         }
-        return byggvei(from, goal, kant);
+        return byggvei(from, goal, kant, true);
     }
     
     /**
      * Rekonstruer stien dijkstras algorytme finner
-     * @param from Noden stien starter fra
-     * @param goal Noden hvor stien stopper
-     * @param kant Hashmap med en skuespiller som Key. Value-en er et array med to elementer hvor det første er en film key skuespilleren 
+     * @param from - Noden stien starter fra
+     * @param goal - Noden hvor stien stopper
+     * @param kant - Hashmap med en skuespiller som Key. Value-en er et array med to elementer hvor det første er en film key skuespilleren 
      * har spilt i, og det andre elementet er en skuespiller som også har spilt i filmen
-     * @return String med stien formatert
+     * @param weighted - flagg som bestemmer om man skal legge til stiens vekt i returstrengen
+     * @return en formatert String med stien fra @param from til @param goal
      */
-    private String byggvei(Node from, Node goal, HashMap<Node,Node[]> kant) {
+    private String byggvei(Node from, Node goal, HashMap<Node,Node[]> kant, boolean weighted) {
         ArrayList<Node> vei = new ArrayList<>();
         Node current = goal;
 
@@ -368,7 +353,9 @@ class Graf {
             totalvekt += (10- edge.getWeight());
             res.append(String.format("===[ %s ] ===> %s\n", edge ,nextNode));
         }
-        res.append("TOTAL VEKT:"+totalvekt);
+        if (weighted) {
+            res.append("TOTAL VEKT:"+totalvekt);
+        }
         return res.toString();
     }
     

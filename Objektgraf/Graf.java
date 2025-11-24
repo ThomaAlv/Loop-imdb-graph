@@ -71,10 +71,8 @@ class Graf {
             e.printStackTrace();
         }
         //print total amount of nodes and edges
-        System.out.println("\nGraph succesfully generated.")
+        System.out.println("\nGraph succesfully generated.");
         System.out.println(graf.countNodesEdges());
-
-
 
         //make a looping UI for the user to choose functionality
         Scanner flowIO = new Scanner(System.in);
@@ -82,12 +80,13 @@ class Graf {
         while (!flowChoice.equals("exit")) {
             //print flow choices for user
             System.out.println(
-                "Please choose one of the following options:\n",
-                "1: Six degrees of IMDb - Find the shortest path between two actors\n",
-                "2: Dijknchill - Find the 'chillest' path between two actors\n",
-                "3: Count components - Give information about the graph's components and their size\n",
-                "exit: Exit the program and terminate."
-            )
+                "\nPlease choose one of the following options:\n" +
+                "1: Six degrees of IMDb - Find the shortest path between two actors\n" +
+                "2: Dijknchill - Find the 'chillest' path between two actors\n" +
+                "3: Count components - Give information about the graph's components and their size\n" +
+                "exit: Exit the program and terminate.\n"
+            );
+            System.out.print("Choice: ");
             flowChoice = flowIO.nextLine();
 
             //handle behaviour based on choice
@@ -108,7 +107,7 @@ class Graf {
                     System.out.println("\nExiting program...\n");
                     break;
                 default:
-                    System.out.println("\nUnknown choice... please choose from one of the following choices:\n")
+                    System.out.println("\nUnknown choice... please choose from one of the following choices:\n");
             }
         }
     }

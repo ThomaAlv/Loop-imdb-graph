@@ -150,11 +150,12 @@ class Graf {
      * @param actorId En streng som er lik IDen eller navnet til en actor i aEdges
      */
     private Actor findActor(String actorId) {
+        actorId = actorId.toLowerCase();
         List<Actor> actorsFound = new ArrayList<>();
 
         //add all actors matching search to actorsFound list
         for (Actor actor: aEdges.keySet()) {
-            if (actorId.equals(actor.getId()) || actorId.equals(actor.toString())) {
+            if (actorId.equals(actor.getId()) || actorId.equals(actor.toString().toLowerCase())) {
                 actorsFound.add(actor);
             }
         }

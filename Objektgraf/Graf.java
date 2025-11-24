@@ -123,12 +123,6 @@ class Graf {
             edges += aEdges.get(key).size();
         }
         
-        //TODO: Disable parallel edges in count
-        //hvis ansett som en parallell graf så teller vi kanter fra skuespiller til film + omvendt
-        for (Movie key : mEdges.keySet()) {
-            edges += mEdges.get(key).size();
-        }
-        
         return String.format("Antall noder: %d\nAntall kanter: %d", nodes, edges);
     }
 

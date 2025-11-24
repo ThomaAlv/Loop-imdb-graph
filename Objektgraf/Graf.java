@@ -70,18 +70,47 @@ class Graf {
             //printer feilbane
             e.printStackTrace();
         }
-
-        // TODO: Add cyclic behaviour to program interface
+        //print total amount of nodes and edges
+        System.out.println("\nGraph succesfully generated.")
         System.out.println(graf.countNodesEdges());
 
-        System.out.println("\nSix degrees of IMDb:");
-        System.out.println(graf.sixDegrees());
 
-        System.out.println("\nDijknChill");
-        System.out.println(graf.dijknchill());
 
-        System.out.println("\nKomponenter:");
-        System.out.println(graf.findComponents());
+        //make a looping UI for the user to choose functionality
+        Scanner flowIO = new Scanner(System.in);
+        String flowChoice = "";
+        while (!flowChoice.equals("exit")) {
+            //print flow choices for user
+            System.out.println(
+                "Please choose one of the following options:\n",
+                "1: Six degrees of IMDb - Find the shortest path between two actors\n",
+                "2: Dijknchill - Find the 'chillest' path between two actors\n",
+                "3: Count components - Give information about the graph's components and their size\n",
+                "exit: Exit the program and terminate."
+            )
+            flowChoice = flowIO.nextLine();
+
+            //handle behaviour based on choice
+            switch (flowChoice) {
+                case "1":
+                    System.out.println("\nSix degrees of IMDb:");
+                    System.out.println(graf.sixDegrees());
+                    break;
+                case "2":
+                    System.out.println("\nDijknChill");
+                    System.out.println(graf.dijknchill());
+                    break;
+                case "3":
+                    System.out.println("\nGraph components:");
+                    System.out.println(graf.findComponents());
+                    break;
+                case "exit": 
+                    System.out.println("\nExiting program...\n");
+                    break;
+                default:
+                    System.out.println("\nUnknown choice... please choose from one of the following choices:\n")
+            }
+        }
     }
     
     private String countNodesEdges() {

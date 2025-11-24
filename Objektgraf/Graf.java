@@ -344,7 +344,7 @@ class Graf {
      * har spilt i, og det andre elementet er en skuespiller som også har spilt i filmen
      * @return String med stien formatert
      */
-    private String byggvei(Actor from, Actor goal, HashMap<Node,Node[]> kant) {
+    private String byggvei(Node from, Node goal, HashMap<Node,Node[]> kant) {
         ArrayList<Node> vei = new ArrayList<>();
         Node current = goal;
 

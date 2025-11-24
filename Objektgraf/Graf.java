@@ -4,6 +4,7 @@ import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Scanner;
 import java.util.Set;
@@ -149,13 +150,63 @@ class Graf {
      * @param actorId En streng som er lik IDen eller navnet til en actor i aEdges
      */
     private Actor findActor(String actorId) {
-        // TODO: make findActor less ambiguous when choosing an actor who has the same name as another one
+        List<Actor> actorsFound = new ArrayList<>();
+
+        //add all actors matching search to actorsFound list
         for (Actor actor: aEdges.keySet()) {
             if (actorId.equals(actor.getId()) || actorId.equals(actor.toString())) {
-                return actor;
+                actorsFound.add(actor);
             }
         }
-        return null;
+        
+        //handle behaviour based on the amount of actors matching the search
+        if (actorsFound.size() < 1) {
+            return null;
+        } else if (actorsFound.size() == 1) {
+            return actorsFound.getFirst();
+        } else { //actorsFound.size() > 1 => Let user choose between IDs            
+            return chooseBetweenMultipleActors(actorsFound);
+        }
+    }
+
+    /**
+     * Lets the user pick a single choice from all actors found by the findActor procedure
+     * @param actorsFound - a List<Actor> containing all actors found by findActor
+     * @return the Actor object of the actor chosen by the user
+     */
+    private Actor chooseBetweenMultipleActors(List<Actor> actorsFound) {
+        //print choices
+        System.out.println("\nMultiple actors found. Please choose:\n");
+        for (int i = 0; i < actorsFound.size(); i++) {
+            System.out.println(String.format("%d: %s (%s)", i+1, actorsFound.get(i).toString(), actorsFound.get(i).id));
+        }
+
+        //handle user input - catch NumberFormatException
+        Scanner actorIO = new Scanner(System.in);
+        Actor actorChoice = null;
+
+        //retry input if user makes invalid choice
+        while (actorChoice == null) {
+            System.out.print("Choice: ");
+            String actorInput = actorIO.nextLine(); 
+            int actorIndex; //buffer actorIndex outside try_catch
+            try {
+                //try parsing input to integer
+                actorIndex = Integer.parseInt(actorInput);
+
+                //throw NumberFormatException if input outside index range
+                if (actorIndex-1 >= actorsFound.size()) {
+                    throw new NumberFormatException();
+                }
+            } catch (NumberFormatException e) {
+                //print error message and let user try again
+                System.out.println("Invalid choice. Please choose an integer number between 1 and " + actorsFound.size());
+                continue;
+            }
+            //end loop once valid choice is made
+            actorChoice = actorsFound.get(actorIndex-1);
+        }
+        return actorChoice;
     }
     
     /** Finner og returnerer en korteste vei (som en streng) fra argument1 til argument2 

@@ -59,8 +59,7 @@ class Graf {
                     Movie tempMovie = movies.get(inputs[x]);
                     
                     //oppretter felt og legger inn i kant-hashmapene
-                    // TODO: Make null-check tempMovie-based as opposed to mEdges's HashSet
-                    if (graf.mEdges.get(tempMovie) != null) {
+                    if (tempMovie != null) {
                         graf.aEdges.get(actor).add(tempMovie);
                         graf.mEdges.get(tempMovie).add(actor);
                     }

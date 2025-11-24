@@ -362,11 +362,11 @@ class Graf {
         res.append(from+ "\n");
         
         for (int i = 1; i < vei.size(); i++) {
-            Node skuespiller = vei.get(i);
+            Node nextNode = vei.get(i);
 
-            Node film = kant.get(skuespiller)[0];
-            totalvekt += (10- film.getWeight());
-            res.append(String.format("===[ %s ] ===> %s\n",film , skuespiller));
+            Node edge = kant.get(nextNode)[0];
+            totalvekt += (10- edge.getWeight());
+            res.append(String.format("===[ %s ] ===> %s\n", edge ,nextNode));
         }
         res.append("TOTAL VEKT:"+totalvekt);
         return res.toString();
